@@ -16,3 +16,11 @@
 2025-10-01 18:01:41.294 UTC [17595] LOG:  invalid length of startup packet
 2025-10-01 18:01:41.583 UTC [17597] LOG:  invalid length of startup packet
 2025-10-01 18:01:41.849 UTC [17598] LOG:  invalid length of startup packet
+2025-10-01 18:11:45.718 UTC [20659] FATAL:  database "Artist" does not exist
+2025-10-01 18:21:02.742 UTC [22781] ERROR:  syntax error at or near "'SELECT * FROM "Track" WHERE "Composer" = %s'" at character 1
+2025-10-01 18:21:02.742 UTC [22781] STATEMENT:  'SELECT * FROM "Track" WHERE "Composer" = %s', ["Queen"]
+	SELECT * FROM "Track" WHERE "Composer" = %s
+	SELECT * FROM "Track" WHERE "Composer" = 'Queen';
+2025-10-01 18:29:22.807 UTC [22781] ERROR:  syntax error at or near "SELECT" at character 34
+2025-10-01 18:29:22.807 UTC [22781] STATEMENT:  SELECT * FROM "Artist" LIMIT 10
+	 SELECT * FROM "Artist" LIMIT 10;
