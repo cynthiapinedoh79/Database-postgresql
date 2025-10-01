@@ -1,0 +1,18 @@
+2025-10-01 17:56:48.188 UTC [16086] FATAL:  lock file "postmaster.pid" already exists
+2025-10-01 17:56:48.188 UTC [16086] HINT:  Is another postmaster (PID 8042) running in data directory "/home/linuxbrew/.linuxbrew/var/postgresql@14"?
+2025-10-01 18:00:08.051 UTC [17034] FATAL:  pre-existing shared memory block (key 18446744072428064143, ID 4) is still in use
+2025-10-01 18:00:08.051 UTC [17034] HINT:  Terminate any old server processes associated with data directory "/home/linuxbrew/.linuxbrew/var/postgresql@14".
+2025-10-01 18:00:08.051 UTC [17034] LOG:  database system is shut down
+2025-10-01 18:01:36.706 UTC [17536] LOG:  starting PostgreSQL 14.19 (Homebrew) on x86_64-pc-linux-gnu, compiled by gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, 64-bit
+2025-10-01 18:01:36.706 UTC [17536] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-10-01 18:01:36.707 UTC [17536] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2025-10-01 18:01:36.710 UTC [17537] LOG:  database system was interrupted; last known up at 2025-10-01 17:55:52 UTC
+2025-10-01 18:01:37.016 UTC [17537] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-10-01 18:01:37.018 UTC [17537] LOG:  redo starts at 0/1D23230
+2025-10-01 18:01:37.018 UTC [17537] LOG:  invalid record length at 0/1D23318: wanted 24, got 0
+2025-10-01 18:01:37.018 UTC [17537] LOG:  redo done at 0/1D232E0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-10-01 18:01:37.026 UTC [17536] LOG:  database system is ready to accept connections
+2025-10-01 18:01:40.210 UTC [17596] LOG:  invalid length of startup packet
+2025-10-01 18:01:41.294 UTC [17595] LOG:  invalid length of startup packet
+2025-10-01 18:01:41.583 UTC [17597] LOG:  invalid length of startup packet
+2025-10-01 18:01:41.849 UTC [17598] LOG:  invalid length of startup packet
