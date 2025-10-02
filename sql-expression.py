@@ -1,12 +1,12 @@
 from sqlalchemy import (
-    create_engine, Table, Column, Float, ForeignKey, Integer, String, MetaData
+    select, create_engine, Table, Column, Float, ForeignKey, Integer, String, MetaData
 )
 
 # executing the instructions from our localhost "chinook" db
 db = create_engine("postgresql://gitpod@localhost/chinook")
 
 
-meta = MetaData(db)
+meta = MetaData()
 
 # create variable for "Artist" table
 artist_table = Table(
