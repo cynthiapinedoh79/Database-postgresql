@@ -1,30 +1,96 @@
+# # .gitpod.yml
+# # This is the complete and corrected configuration file.
+
+# tasks:
+#   - name: Setup Database & Dependencies
+#     init: |
+#       # 1. Install Homebrew (if not already present)
+#       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      
+#       # 2. Install PostgreSQL and Python libraries (this part only runs once)
+#       echo "Installing tools..."
+#       brew install postgresql
+#       pip3 install psycopg2-binary
+#       pip install sqlalchemy==1.4.46
+#     command: |
+#       # 3. Start the database server
+#       echo "Starting PostgreSQL server..."
+#       pg_ctl -D /home/linuxbrew/.linuxbrew/var/postgresql@14 start -l logfile
+#       sleep 3 # Give the server a moment to start
+
+#       # 4. Create the symbolic link for the socket
+#       echo "Fixing connection path..."
+#       sudo mkdir -p /var/run/postgresql
+#       sudo ln -s /home/gitpod/.pg_ctl/sockets/.s.PGSQL.5432 /var/run/postgresql/.s.PGSQL.5432
+
+#       # 5. Create and populate the database
+#       echo "Setting up the chinook database..."
+#       psql postgres -c "CREATE DATABASE chinook;"
+#       psql chinook < Chinook_PostgreSql.sql
+
+#       echo "✅ Your environment is fully configured and ready!"
+
+
+#       # .gitpod.yml  — lean, repeatable PostgreSQL + SQLAlchemy 1.4 setup
+
+# # .gitpod.yml
+# # An improved and more robust configuration file.
+
 # .gitpod.yml
-# This is the complete and corrected configuration file.
+# An improved and more robust configuration file (no requirements.txt needed).
 
 tasks:
-  - name: Setup Database & Dependencies
+  - name: Setup Workspace
+    # 'init' runs only once when the workspace is first created.
     init: |
-      # 1. Install Homebrew (if not already present)
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      echo "🚀 Starting workspace initialization..."
       
-      # 2. Install PostgreSQL and Python libraries (this part only runs once)
-      echo "Installing tools..."
+      # 1. Install Homebrew non-interactively
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+
+      # 2. Install PostgreSQL
+      echo "🍺 Installing PostgreSQL via Homebrew..."
       brew install postgresql
-      pip3 install psycopg2-binary SQLAlchemy
+
+      # 3. Install Python dependencies directly
+      echo "🐍 Installing Python packages..."
+      pip3 install psycopg2-binary
+      pip3 install sqlalchemy==1.4.46
+      
+      echo "✅ Initialization complete!"
+
+    # 'command' runs every time the workspace starts.
     command: |
-      # 3. Start the database server
-      echo "Starting PostgreSQL server..."
-      pg_ctl -D /home/linuxbrew/.linuxbrew/var/postgresql@14 start -l logfile
-      sleep 3 # Give the server a moment to start
+      echo "⚙️ Configuring environment for startup..."
 
-      # 4. Create the symbolic link for the socket
-      echo "Fixing connection path..."
-      sudo mkdir -p /var/run/postgresql
-      sudo ln -s /home/gitpod/.pg_ctl/sockets/.s.PGSQL.5432 /var/run/postgresql/.s.PGSQL.5432
+      # 3. Check if PostgreSQL server is running, and start if not.
+      if ! pg_isready -q; then
+        echo "🐘 Starting PostgreSQL server..."
+        pg_ctl -D /home/linuxbrew/.linuxbrew/var/postgresql@14 start -l logfile
+        sleep 3 # Give the server a moment to start
+      else
+        echo "🐘 PostgreSQL server is already running."
+      fi
 
-      # 5. Create and populate the database
-      echo "Setting up the chinook database..."
-      psql postgres -c "CREATE DATABASE chinook;"
-      psql chinook < Chinook_PostgreSql.sql
+      # 4. Create the symbolic link for the socket if it doesn't exist.
+      SOCKET_LINK="/var/run/postgresql/.s.PGSQL.5432"
+      if [ ! -L "$SOCKET_LINK" ]; then
+        echo "🔗 Creating socket link..."
+        sudo mkdir -p /var/run/postgresql
+        sudo ln -s /home/gitpod/.pg_ctl/sockets/.s.PGSQL.5432 "$SOCKET_LINK"
+      else
+        echo "🔗 Socket link already exists."
+      fi
+      
+      # 5. Create and populate the database if it doesn't exist.
+      DB_NAME="chinook"
+      psql -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"
+      if [ $? -ne 0 ]; then
+        echo "💾 Creating and populating the '$DB_NAME' database..."
+        psql postgres -c "CREATE DATABASE $DB_NAME;"
+        psql "$DB_NAME" < Chinook_PostgreSql.sql
+      else
+        echo "💾 Database '$DB_NAME' already exists."
+      fi
 
-      echo "✅ Your environment is fully configured and ready!"
+      echo "✅ Your environment is fully configured and ready to use!"
