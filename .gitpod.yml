@@ -1,0 +1,30 @@
+# .gitpod.yml
+# This is the complete and corrected configuration file.
+
+tasks:
+  - name: Setup Database & Dependencies
+    init: |
+      # 1. Install Homebrew (if not already present)
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      
+      # 2. Install PostgreSQL and Python libraries (this part only runs once)
+      echo "Installing tools..."
+      brew install postgresql
+      pip3 install psycopg2-binary SQLAlchemy
+    command: |
+      # 3. Start the database server
+      echo "Starting PostgreSQL server..."
+      pg_ctl -D /home/linuxbrew/.linuxbrew/var/postgresql@14 start -l logfile
+      sleep 3 # Give the server a moment to start
+
+      # 4. Create the symbolic link for the socket
+      echo "Fixing connection path..."
+      sudo mkdir -p /var/run/postgresql
+      sudo ln -s /home/gitpod/.pg_ctl/sockets/.s.PGSQL.5432 /var/run/postgresql/.s.PGSQL.5432
+
+      # 5. Create and populate the database
+      echo "Setting up the chinook database..."
+      psql postgres -c "CREATE DATABASE chinook;"
+      psql chinook < Chinook_PostgreSql.sql
+
+      echo "✅ Your environment is fully configured and ready!"
